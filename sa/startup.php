@@ -2,7 +2,7 @@
 
 ob_start();
 
-ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . 'PEAR' . PATH_SEPARATOR . 'core');
+ini_set('include_path', '.' . PATH_SEPARATOR . 'PEAR' . PATH_SEPARATOR . 'core');
 ini_set('session.use_trans_sid', 0);
 
 error_reporting (E_ALL ^ E_NOTICE);
@@ -15,7 +15,7 @@ define('CLEAN_URLS', true);
 define('ENCRYPT_URLS', false);
 define('SECRET_KEY', 'monaco');
 define('CHECK_URLS_CRC32', true); //has effect only if ENCRYPT_URLS == true
-define('SESSION_NAME', 'CBSID');
+define('SESSION_NAME', 'SASID');
 define('FORCE_SESSION_COOKIE', true);
 define('SESSION_EXPIRES', 0);
 define('SESSION_IDLE', 0);
