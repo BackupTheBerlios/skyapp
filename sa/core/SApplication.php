@@ -12,7 +12,7 @@
    | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
    +-----------------------------------------------------------------------+
 
-   $Id: SApplication.php,v 1.1 2006/01/21 11:38:36 trinculescu Exp $
+   $Id: SApplication.php,v 1.2 2006/01/21 13:05:56 trinculescu Exp $
   */
 
 define('APPLICATION_HOME', dirname(__FILE__));
@@ -111,7 +111,7 @@ class SApplication extends PEAR {
     function _SApplication() {
         if (eregi('text/html', $this->_page->_content_type)) {
 ?>
-<p style="font-size: x-small">Powered by <a href="http://developer.berlios.de/projects/skyapp/" target="_blank">SkyApp</a></p>
+<p style="font-size: x-small">Powered by <a href="http://www.skyweb.ro/" target="_blank">SkyApp</a></p>
 <?php
             if (ENABLE_PROFILING) {
 ?>
