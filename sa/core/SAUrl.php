@@ -12,7 +12,7 @@
 | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
 +-----------------------------------------------------------------------+
 
-$Id: SAUrl.php,v 1.2 2006/01/26 22:50:25 trinculescu Exp $
+$Id: SAUrl.php,v 1.3 2006/01/26 23:06:34 trinculescu Exp $
 */
 
 
@@ -55,7 +55,7 @@ class SAUrl {
 	}
 
 	function restoreEncrypted() {
-		$encoded = (SEARCH_ENGINE_FRIENDLY_URLS) ? substr($_SERVER['PATH_INFO'], 1) : $_SERVER['QUERY_STRING'];
+		$encoded = substr($_SERVER['PATH_INFO'], 1);
 		$rc4 = & new Crypt_RC4(SECRET_KEY);
 		$encoded = base64_decode($encoded);
 		$rc4->decrypt($encoded);
@@ -65,18 +65,18 @@ class SAUrl {
 				$_REQUEST[$name] = $_GET[$name] = $value;
 			}
 			unset($params['crc32_chk']);
-		}
-		if (CHECK_URLS_CRC32) {
-			if (!isset($_GET['crc32_chk']) || (crc32(serialize($params)) != $_GET['crc32_chk'])) {
-				return PEAR::throwError(
-					'URL Error: URL Manipulation',
-					URL_MANIPULATION,
-					array(
-						'class' => 'SAUrl',
-						'file' => __FILE__,
-						'line' => __LINE__
-					)
-				);
+			if (CHECK_URLS_CRC32) {
+				if (!isset($_GET['crc32_chk']) || (crc32(serialize($params)) != $_GET['crc32_chk'])) {
+					return PEAR::throwError(
+						'URL Error: URL Manipulation',
+						URL_MANIPULATION,
+						array(
+							'class' => 'SAUrl',
+							'file' => __FILE__,
+							'line' => __LINE__
+						)
+					);
+				}
 			}
 		}
 		return URL_OK;
