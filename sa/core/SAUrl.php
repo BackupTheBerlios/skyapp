@@ -12,7 +12,7 @@
 | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
 +-----------------------------------------------------------------------+
 
-$Id: SAUrl.php,v 1.3 2006/01/26 23:06:34 trinculescu Exp $
+$Id: SAUrl.php,v 1.4 2006/01/26 23:33:34 trinculescu Exp $
 */
 
 
@@ -27,7 +27,10 @@ class SAUrl {
 		if (!FORCE_SESSION_COOKIE && SID && SASession::id()) {
 			$params[SASession::name()] = SASession::id();
 		}
-		$url = (($fullpath) ? SAURL::baseHref($secure) : '') . ((CLEAN_URLS) ? '' : basename($_SERVER['SCRIPT_NAME'])) . ((CLEAN_URLS) ? '' : '/') . SAUrl::build($page, $params);
+		$filename = basename($page);
+		$dir = dirname($page);
+		$dir = ($dir == '.') ? '' : $dir . '/';
+		$url = (($fullpath) ? SAURL::baseHref($secure) : '') . $dir . SAUrl::build($filename, $params);
 		return $url;
 	}
 
