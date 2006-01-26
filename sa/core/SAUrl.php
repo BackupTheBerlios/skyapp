@@ -12,7 +12,7 @@
 | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
 +-----------------------------------------------------------------------+
 
-$Id: SAUrl.php,v 1.1 2006/01/21 11:38:36 trinculescu Exp $
+$Id: SAUrl.php,v 1.2 2006/01/26 22:50:25 trinculescu Exp $
 */
 
 
@@ -27,7 +27,7 @@ class SAUrl {
 		if (!FORCE_SESSION_COOKIE && SID && SASession::id()) {
 			$params[SASession::name()] = SASession::id();
 		}
-		$url = (($fullpath) ? SAURL::baseHref($secure) : '') . ((CLEAN_URLS) ? '' : basename($_SERVER['SCRIPT_NAME'])) . ((SEARCH_ENGINE_FRIENDLY_URLS) ? ((CLEAN_URLS) ? '' : '/') : '?') . SAUrl::build($page, $params);
+		$url = (($fullpath) ? SAURL::baseHref($secure) : '') . ((CLEAN_URLS) ? '' : basename($_SERVER['SCRIPT_NAME'])) . ((CLEAN_URLS) ? '' : '/') . SAUrl::build($page, $params);
 		return $url;
 	}
 
@@ -44,17 +44,14 @@ class SAUrl {
 		}
 	}
 
-	function restoreSimple() {
-		if (SEARCH_ENGINE_FRIENDLY_URLS) {
-			$arr_path_info = explode('/', $_SERVER['PATH_INFO']);
-			$length = count($arr_path_info);
-			for($i = 1; $i < $length - 2; $i += 2) {
-				$var = $arr_path_info[$i];
-				$_REQUEST[$var] = $_GET[$var] = urldecode(html_entity_decode($arr_path_info[$i + 1]));
-			}
-			$page = $arr_path_info[$i];
-			$_REQUEST[APPLICATION_PAGE_VAR_NAME] = $_GET[APPLICATION_PAGE_VAR_NAME] = substr($page, 0, strpos($page, DUMMY_EXTENSION));
+	function restoreSimple() {		
+		$vars = explode(',', basename($_SERVER['PATH_INFO']));
+		$len = count($vars);
+		for($i = 0; $i < $len - 2; $i += 2) {
+			$_REQUEST[$vars[$i]] = $_GET[$vars[$i]] = $vars[$i + 1];
 		}
+		$dir = (empty($_SERVER['PATH_INFO']) || dirname($_SERVER['PATH_INFO']) == '/') ? '' : substr(dirname($_SERVER['PATH_INFO']), 1) . '/';		
+		$_REQUEST[APPLICATION_PAGE_VAR_NAME] = $_GET[APPLICATION_PAGE_VAR_NAME] = $dir . substr($vars[$len - 1], 0, strpos($vars[$len - 1], DUMMY_EXTENSION));
 	}
 
 	function restoreEncrypted() {
@@ -96,18 +93,17 @@ class SAUrl {
 
 	function buildSimple($page, $params) {
 		$url = '';
-		if (is_array($params)) {
+		if (is_array($params) && count($params)) {
 			$keys = array_keys($params);
 			$len = count($keys);
 			for($i = 0; $i < $len; $i++) {
 				$value = $params[$keys[$i]];
 				if (empty($value)) continue;
 				$params[$keys[$i]] = htmlentities(urlencode($value));
-				$url .= (SEARCH_ENGINE_FRIENDLY_URLS) ? $keys[$i] . '/' . $params[$keys[$i]] : $keys[$i] . '=' . $params[$keys[$i]];
-				$url .= (SEARCH_ENGINE_FRIENDLY_URLS) ? '/' : '&';
+				$url .= $keys[$i] . ',' . $value . ',';
 			}
 		}
-		$url .= (SEARCH_ENGINE_FRIENDLY_URLS) ? "$page" . DUMMY_EXTENSION : APPLICATION_PAGE_VAR_NAME . "=$page";
+		$url .= $page . DUMMY_EXTENSION;
 		return $url;
 	}
 

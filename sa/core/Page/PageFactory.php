@@ -12,7 +12,7 @@
    | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
    +-----------------------------------------------------------------------+
 
-   $Id: PageFactory.php,v 1.1 2006/01/21 11:38:36 trinculescu Exp $
+   $Id: PageFactory.php,v 1.2 2006/01/26 22:50:25 trinculescu Exp $
   */
 
 define('PAGE_FACTORY_OK', 1);
@@ -24,7 +24,7 @@ class PageFactory extends PEAR {
 
     function &factory($name) {
         $name = empty($name) ? APPLICATION_DEFAULT_PAGE : $name;
-        include_once($file = PAGE_FACTORY_SEARCH_DIR . str_replace("-", "/", $name) . '.php');
+        include_once($file = PAGE_FACTORY_SEARCH_DIR . $name . '.php');
 
         if (!class_exists($classname = 'Page_' . basename($file, '.php'))) {
             if ($name == APPLICATION_404_PAGE) {

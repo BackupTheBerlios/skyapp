@@ -12,7 +12,7 @@
 | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
 +-----------------------------------------------------------------------+
 
-$Id: SmartyPage.php,v 1.1 2006/01/21 11:38:36 trinculescu Exp $
+$Id: SmartyPage.php,v 1.2 2006/01/26 22:50:25 trinculescu Exp $
 */
 
 include_once(SMARTY_DIR . 'Smarty.class.php');
@@ -28,8 +28,7 @@ class SmartyPage extends Page {
 		$this->_smarty->compile_dir = APPLICATION_HOME . '/Templates_c';
 		$this->_smarty->use_sub_dirs = true;
 
-		$pageName = $this->getName();
-		$this->setTempalte(str_replace("-", "/", $pageName) . '.tpl');
+		$this->setTempalte($this->getName() . '.tpl');
 	}
 
 	function setTempalte($template) {

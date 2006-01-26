@@ -12,7 +12,7 @@
    | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
    +-----------------------------------------------------------------------+
    
-   $Id: XML.php,v 1.1 2006/01/21 11:38:36 trinculescu Exp $
+   $Id: XML.php,v 1.2 2006/01/26 22:50:25 trinculescu Exp $
   */
 
 include_once('I18N/Messages/Common.php');
