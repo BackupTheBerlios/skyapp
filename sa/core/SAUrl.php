@@ -12,7 +12,7 @@
 | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
 +-----------------------------------------------------------------------+
 
-$Id: SAUrl.php,v 1.5 2006/01/30 20:13:37 trinculescu Exp $
+$Id: SAUrl.php,v 1.6 2006/01/30 20:46:49 trinculescu Exp $
 */
 
 
@@ -62,7 +62,7 @@ class SAUrl {
 	function restoreEncrypted() {
 		$encoded = basename($_SERVER['PATH_INFO']);
 		$rc4 = & new Crypt_RC4(SECRET_KEY);
-		$encoded = base64_decode($encoded);
+		$encoded = base64_decode(str_replace('^', '/', $encoded));
 		$rc4->decrypt($encoded);
 		$params = unserialize($encoded);
 		if (is_array($params)) {
@@ -118,7 +118,7 @@ class SAUrl {
 		$rc4 = & new Crypt_RC4(SECRET_KEY);
 		$encoded = serialize($params);
 		$rc4->crypt($encoded);
-		$encoded = base64_encode($encoded);
+		$encoded = str_replace('/', '^', base64_encode($encoded));
 		return $encoded;
 	}
 } //end class SAUrl
