@@ -12,7 +12,7 @@
 | Authors: Andi Trînculescu <andi@skyweb.ro>                            |
 +-----------------------------------------------------------------------+
 
-$Id: SAUrl.php,v 1.4 2006/01/26 23:33:34 trinculescu Exp $
+$Id: SAUrl.php,v 1.5 2006/01/30 20:13:37 trinculescu Exp $
 */
 
 
@@ -39,12 +39,15 @@ class SAUrl {
 		return 'http' . (($secure) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/' . substr($path, 1) . ((strlen($path) > 1) ? '/' : '');
 	}
 
-	function restore() {
+	function restore() {		
 		if (ENCRYPT_URLS) {
-			return SAUrl::restoreEncrypted();
+			$result = SAUrl::restoreEncrypted();
 		} else {
-			return SAUrl::restoreSimple();
+			$result = SAUrl::restoreSimple();
 		}
+		$dir = (empty($_SERVER['PATH_INFO']) || dirname($_SERVER['PATH_INFO']) == '/') ? '' : substr(dirname($_SERVER['PATH_INFO']), 1) . '/';
+		$_REQUEST[APPLICATION_PAGE_VAR_NAME] = $_GET[APPLICATION_PAGE_VAR_NAME] = $dir . $_GET[APPLICATION_PAGE_VAR_NAME];
+		return $result;
 	}
 
 	function restoreSimple() {		
@@ -52,13 +55,12 @@ class SAUrl {
 		$len = count($vars);
 		for($i = 0; $i < $len - 2; $i += 2) {
 			$_REQUEST[$vars[$i]] = $_GET[$vars[$i]] = $vars[$i + 1];
-		}
-		$dir = (empty($_SERVER['PATH_INFO']) || dirname($_SERVER['PATH_INFO']) == '/') ? '' : substr(dirname($_SERVER['PATH_INFO']), 1) . '/';		
-		$_REQUEST[APPLICATION_PAGE_VAR_NAME] = $_GET[APPLICATION_PAGE_VAR_NAME] = $dir . substr($vars[$len - 1], 0, strpos($vars[$len - 1], DUMMY_EXTENSION));
+		}				
+		$_REQUEST[APPLICATION_PAGE_VAR_NAME] = $_GET[APPLICATION_PAGE_VAR_NAME] = substr($vars[$len - 1], 0, strpos($vars[$len - 1], DUMMY_EXTENSION));
 	}
 
 	function restoreEncrypted() {
-		$encoded = substr($_SERVER['PATH_INFO'], 1);
+		$encoded = basename($_SERVER['PATH_INFO']);
 		$rc4 = & new Crypt_RC4(SECRET_KEY);
 		$encoded = base64_decode($encoded);
 		$rc4->decrypt($encoded);

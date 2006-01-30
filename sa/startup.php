@@ -11,7 +11,7 @@ define('DSN', '');
 define('ENABLE_PROFILING', false);
 define('ENABLE_DEBUG', false);
 define('DUMMY_EXTENSION', '.html');
-define('ENCRYPT_URLS', false);
+define('ENCRYPT_URLS', true);
 define('SECRET_KEY', 'monaco');
 define('CHECK_URLS_CRC32', true); //has effect only if ENCRYPT_URLS == true
 define('SESSION_NAME', 'SASID');
